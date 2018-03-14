@@ -16,29 +16,23 @@ void setup() {
 
     pinMode(OUT_PIN, OUTPUT);
     digitalWrite(OUT_PIN, 0);
+
+    timer.attachInterrupt(&Timer_callback, 300); // microseconds
 }
 
 void Timer_callback() {
     digitalWrite(OUT_PIN, 1); // to visualize when it was called
     digitalWrite(OUT_PIN, 0);
+
+    timer.attachInterrupt(&Timer_callback, 300); // microseconds
 }
 
 
 void loop() {
-    digitalWrite(OUT_PIN, 1); digitalWrite(OUT_PIN, 0); // double pulse
-    digitalWrite(OUT_PIN, 1); digitalWrite(OUT_PIN, 0); // in the loop
-    timer.attachInterrupt(&Timer_callback, 300); // microseconds
-    delayMicroseconds(1000);
-}
-
-
-void sleep() {
-    // TODO:
-//  __WFE(); // Enter System ON sleep mode (OFF mode would stop timers)
-//  __SEV(); // Make sure any pending events are cleared
-//  __WFE();
-
-    // More info about WFE - SEV - WFE sequence:
-    // https://devzone.nordicsemi.com/index.php/how-do-you-put-the-nrf51822-chip-to-sleep#reply-1589
+    // Sleep
+    __WFE(); // Enter System ON sleep mode (OFF mode would stop timers)
+    __SEV(); // Make sure any pending events are cleared
+    __WFE(); // More info about this sequence:
+// devzone.nordicsemi.com/f/nordic-q-a/490/how-do-you-put-the-nrf51822-chip-to-sleep/2571
 }
 
