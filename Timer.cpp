@@ -12,6 +12,11 @@ TimerClass::TimerClass(int timer, int channel) {
 
     Timer_callbackPtr = defaultFunc;
     Timers[timer] = this;
+
+    // Timer mode with 32bit width
+    nrf_timer_bit_width_set(nrf_timer, NRF_TIMER_BIT_WIDTH_32);
+    nrf_timer_mode_set(nrf_timer, NRF_TIMER_MODE_TIMER);
+    nrf_timer_frequency_set(nrf_timer, NRF_TIMER_FREQ_16MHz);
 }
 
 
@@ -27,11 +32,6 @@ void TimerClass::attachInterrupt(funcPtr_t callback, int microsec) {
     // Start if not already running (and reset?)
     nrf_timer_task_trigger(nrf_timer, NRF_TIMER_TASK_START);
     nrf_timer_task_trigger(nrf_timer, NRF_TIMER_TASK_CLEAR);
-
-    // Timer mode with 32bit width
-    nrf_timer_bit_width_set(nrf_timer, NRF_TIMER_BIT_WIDTH_32);
-    nrf_timer_mode_set(nrf_timer, NRF_TIMER_MODE_TIMER);
-    nrf_timer_frequency_set(nrf_timer, NRF_TIMER_FREQ_16MHz);
 
     // Clear and enable compare interrupt
     nrf_timer_int_mask_t chanel_mask = nrf_timer_compare_int_get(cc_channel);
